@@ -9,6 +9,9 @@ class SiteUser(models.Model):
   ]
   user = models.OneToOneField(User, on_delete = models.CASCADE)
   user_type = models.CharField(max_length = 1, choices = user_type_choices,default = "S",blank = False)
+  def __str__(self):
+    return '%s %s' % (self.user.username, self.user_type)
+
 
 # Question Model
 class Question(models.Model):
