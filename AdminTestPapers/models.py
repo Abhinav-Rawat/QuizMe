@@ -7,7 +7,7 @@ class SiteUser(models.Model):
     ("T","Teacher"),
     ("S","Student"),
   ]
-  user = models.OneToOneField(User, on_delete = models.CASCADE)
+  user = models.OneToOneField(User, on_delete = models.CASCADE, related_name='profile')
   user_type = models.CharField(max_length = 1, choices = user_type_choices,default = "S",blank = False)
   def __str__(self):
     return '%s %s' % (self.user.username, self.user_type)
@@ -17,7 +17,9 @@ class SiteUser(models.Model):
 class Question(models.Model):
   teacher = models.ForeignKey(SiteUser, on_delete = models.CASCADE,default = None)
   question_text = models.CharField(max_length = 300)
-  op1_text = models.CharField(max_length = 100)
+  # created_at = models.DateTimeField(auto_now_add=True)
+  created_at = models.DateTimeField('date published')
+  op1_text = models.CharField(max_length=100)
   op2_text = models.CharField(max_length = 100)
   op3_text = models.CharField(max_length = 100)
   op4_text = models.CharField(max_length = 100)
@@ -26,7 +28,7 @@ class Question(models.Model):
 # Question Paper Model
 class QuestionPaper(models.Model):
   teacher = models.ForeignKey(SiteUser, on_delete = models.CASCADE,default = None)
-  pub_date = models.DateTimeField('date published') 
+  pub_date = models.DateTimeField('date published')
   title_text = models.CharField(max_length = 100)
   question = models.ManyToManyField(Question)
 
@@ -36,12 +38,3 @@ class MarksFromTheQuestion(models.Model):
   test = models.ForeignKey(QuestionPaper, on_delete = models.CASCADE)
   student = models.ForeignKey(SiteUser, on_delete = models.CASCADE, default = None)
   correct = models.BooleanField(default = 0)
-
-
-
-
-
-
-
-
-

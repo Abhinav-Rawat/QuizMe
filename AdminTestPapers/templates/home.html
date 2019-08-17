@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+
 {% block content%}
 <h1>Welcome</h1>
+  {% if question %}
+    <h3>Question Added</h3>
+  {% endif %}
 {% endblock %}

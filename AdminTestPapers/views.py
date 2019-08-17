@@ -1,6 +1,8 @@
+from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
-from AdminTestPapers.forms import UserSignUpForm,UserSignUpForm_User_Type,UserLoginForm
+from AdminTestPapers.forms import UserSignUpForm, UserSignUpForm_User_Type, UserLoginForm, QuestionForm
+from datetime import datetime
 
 def home(request):
     return render(request,'home.html')
@@ -16,8 +18,6 @@ def signup(request):
             user_type = signup_form_user_type.save(commit = False)
             user_type.user = user
             user_type.save() 
-            # username = singup_form.cleaned_data.get('username')
-            # raw_password = signup_form.cleaned_data.get('password1')
             return redirect('/signin')
         else:
             print("Error In Filling Up The Form")
@@ -36,11 +36,51 @@ def signin(request):
             if theUser is not None:
                 login(request,theUser)
                 print("Success")
+                return redirect('/')
             else:
                 print("Invalid User")
+                return redirect('/signin')
     else:
         signin_form = UserLoginForm()
     return render(request,'signin.html',{'signin_form' : signin_form})
     
 
+def question(request):
+    if (request.user.is_authenticated):
+        user = request.user
+        print(user)
+        if (user.profile and user.profile.user_type == 'T'):
+            profile = user.profile
+            if (request.method == "POST"):
+                question_form = QuestionForm(data=request.POST)
+                if question_form.is_valid():
+                    question = question_form.save(commit=False)
+                    teacher = profile
+                    teacher.user = user
+                    question.teacher = teacher
+                    question.created_at = datetime.now()
+                    question.save()
+                    print("Question added!")
+                    return redirect('/', {'question': True})
+                else:
+                    print("Error Filling the Form!")
+            else:
+                question_form = QuestionForm()
+            return render(request, 'question.html', {'question_form': question_form})
+        else:
+            return HttpResponse("Invalid Request")
+    else:
+        return redirect('/signin')
 
+
+def makePaper(request):
+    if (request.user.is_authenticated):
+        user = request.user
+        print(user)
+        if (user.profile and user.profile.user_type == 'T'):
+            profile = user.profile
+            return render(request, 'makePaper.html', {})
+        else:
+            return HttpResponse("Invalid Request")
+    else:
+        return redirect('/signin')
