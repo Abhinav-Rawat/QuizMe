@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content%}
+<h1>Add - Questions</h1>
+  <form method="POST" >
+    {% csrf_token %}
+    <p><label>Question Paper Title</label><input type="text" name="title_text" maxlength="100"/></p>
+    <p><label>Select Some Question To Add</label><select name="question">
+      {% for question in questions %}
+        <option value="{{question}}">{{question.question_text}}</option>
+      {% endfor %}
+      </select>
+    </p>
+    <button type="submit">Done</button>
+  </form>
+  
+{% endblock %}

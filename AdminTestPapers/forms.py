@@ -1,5 +1,5 @@
 from django import forms
-from AdminTestPapers.models import SiteUser, Question
+from AdminTestPapers.models import SiteUser, Question, QuestionPaper
 from django.contrib.auth.models import User
 
 class UserSignUpForm_User_Type(forms.ModelForm):
@@ -21,4 +21,4 @@ class UserLoginForm(forms.Form):
 class QuestionForm(forms.ModelForm):
   class Meta:
     model = Question
-    exclude = ['teacher', 'created_at']
+    exclude = ['teacher', 'created_at']  

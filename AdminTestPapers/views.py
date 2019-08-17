@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from AdminTestPapers.forms import UserSignUpForm, UserSignUpForm_User_Type, UserLoginForm, QuestionForm
 from datetime import datetime
+from AdminTestPapers.models import Question
 
 def home(request):
     return render(request,'home.html')
@@ -79,7 +80,14 @@ def makePaper(request):
         print(user)
         if (user.profile and user.profile.user_type == 'T'):
             profile = user.profile
-            return render(request, 'makePaper.html', {})
+            # return render(request, 'makePaper.html', {})
+            if request.method == "POST":
+                pass
+                #todo
+            else:
+                questions = Question.objects.filter(teacher = profile).order_by('created_at')
+                return render(request,"paper_maker.html",{'questions':questions})
+
         else:
             return HttpResponse("Invalid Request")
     else:
