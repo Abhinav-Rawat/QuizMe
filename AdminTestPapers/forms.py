@@ -21,4 +21,4 @@ class UserLoginForm(forms.Form):
 class QuestionForm(forms.ModelForm):
   class Meta:
     model = Question
-    exclude = ['teacher']
+    exclude = ['teacher', 'created_at']

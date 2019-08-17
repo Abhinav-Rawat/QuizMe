@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from AdminTestPapers.forms import UserSignUpForm, UserSignUpForm_User_Type, UserLoginForm, QuestionForm
+from datetime import datetime
 
 def home(request):
     return render(request,'home.html')
@@ -56,8 +57,8 @@ def question(request):
                     question = question_form.save(commit=False)
                     teacher = profile
                     teacher.user = user
-                    # teacher.save()
                     question.teacher = teacher
+                    question.created_at = datetime.now()
                     question.save()
                     print("Question added!")
                     return redirect('/', {'question': True})
@@ -66,6 +67,19 @@ def question(request):
             else:
                 question_form = QuestionForm()
             return render(request, 'question.html', {'question_form': question_form})
+        else:
+            return HttpResponse("Invalid Request")
+    else:
+        return redirect('/signin')
+
+
+def makePaper(request):
+    if (request.user.is_authenticated):
+        user = request.user
+        print(user)
+        if (user.profile and user.profile.user_type == 'T'):
+            profile = user.profile
+            return render(request, 'makePaper.html', {})
         else:
             return HttpResponse("Invalid Request")
     else:

@@ -17,7 +17,9 @@ class SiteUser(models.Model):
 class Question(models.Model):
   teacher = models.ForeignKey(SiteUser, on_delete = models.CASCADE,default = None)
   question_text = models.CharField(max_length = 300)
-  op1_text = models.CharField(max_length = 100)
+  # created_at = models.DateTimeField(auto_now_add=True)
+  created_at = models.DateTimeField('date published')
+  op1_text = models.CharField(max_length=100)
   op2_text = models.CharField(max_length = 100)
   op3_text = models.CharField(max_length = 100)
   op4_text = models.CharField(max_length = 100)
@@ -26,7 +28,7 @@ class Question(models.Model):
 # Question Paper Model
 class QuestionPaper(models.Model):
   teacher = models.ForeignKey(SiteUser, on_delete = models.CASCADE,default = None)
-  pub_date = models.DateTimeField('date published') 
+  pub_date = models.DateTimeField('date published')
   title_text = models.CharField(max_length = 100)
   question = models.ManyToManyField(Question)
 
