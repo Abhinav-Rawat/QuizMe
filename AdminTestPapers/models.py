@@ -7,7 +7,7 @@ class SiteUser(models.Model):
     ("T","Teacher"),
     ("S","Student"),
   ]
-  user = models.OneToOneField(User, on_delete = models.CASCADE)
+  user = models.OneToOneField(User, on_delete = models.CASCADE, related_name='profile')
   user_type = models.CharField(max_length = 1, choices = user_type_choices,default = "S",blank = False)
   def __str__(self):
     return '%s %s' % (self.user.username, self.user_type)
@@ -36,12 +36,3 @@ class MarksFromTheQuestion(models.Model):
   test = models.ForeignKey(QuestionPaper, on_delete = models.CASCADE)
   student = models.ForeignKey(SiteUser, on_delete = models.CASCADE, default = None)
   correct = models.BooleanField(default = 0)
-
-
-
-
-
-
-
-
-
