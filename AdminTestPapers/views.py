@@ -3,7 +3,8 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from AdminTestPapers.forms import UserSignUpForm, UserSignUpForm_User_Type, UserLoginForm, QuestionForm
 from datetime import datetime
-from AdminTestPapers.models import Question
+from AdminTestPapers.models import Question, QuestionPaper
+import json
 
 def home(request):
     return render(request,'home.html')
@@ -82,8 +83,24 @@ def makePaper(request):
             profile = user.profile
             # return render(request, 'makePaper.html', {})
             if request.method == "POST":
-                pass
-                #todo
+                paper = QuestionPaper()
+                paper.teacher = profile
+                data = request.POST.get('data')
+                data = json.loads(data)
+                print(data)
+                # paper.title_text = request.POST["title_text"]
+                # qArr = dict(request.POST.lists())["question"]
+                # paper.pub_date = datetime.now()
+                # paper.save()
+                # print("---------" )
+                # print(request.POST)
+                # print(type(qArr))
+                # print("---------" )
+
+                # paper.question.add(*qArr)
+                # paper.save()
+                
+                return HttpResponse("Paper Created")
             else:
                 questions = Question.objects.filter(teacher = profile).order_by('created_at')
                 return render(request,"paper_maker.html",{'questions':questions})
