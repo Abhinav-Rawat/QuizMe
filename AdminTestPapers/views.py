@@ -104,6 +104,7 @@ def makePaper(request):
                     return HttpResponse("Error Filling the Form!")
                 
             else:
+                paper_form = PaperForm()
                 return render(request,"paper_maker.html",{'paper_form': paper_form})
 
         else:
