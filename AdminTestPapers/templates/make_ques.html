@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h1>Make Question</h1>
+  <h3>To make question click on the button below and you'll be redirected to a page where you can enter information about the question.</h3>
+  {{paper.id}}
+  <button>
+    <a href="question/?id={{paper.id}}" target="_blank"> Make Question </a>
+
+  <button>
+    <a href="/">Finish</a>
+  </button>
+
+
+{% endblock %}

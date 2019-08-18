@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
-from AdminTestPapers.forms import UserSignUpForm, UserSignUpForm_User_Type, UserLoginForm, QuestionForm
+from AdminTestPapers.forms import UserSignUpForm, UserSignUpForm_User_Type, UserLoginForm, QuestionForm, PaperForm
 from datetime import datetime
 from AdminTestPapers.models import Question, QuestionPaper
 import json
@@ -57,17 +57,16 @@ def question(request):
                 question_form = QuestionForm(data=request.POST)
                 if question_form.is_valid():
                     question = question_form.save(commit=False)
-                    teacher = profile
-                    teacher.user = user
-                    question.teacher = teacher
                     question.created_at = datetime.now()
                     question.save()
                     print("Question added!")
-                    return redirect('/', {'question': True})
+                    return HttpResponse("Question Added")
                 else:
-                    print("Error Filling the Form!")
-            else:
-                question_form = QuestionForm()
+                    return HttpResponse("Error Filling the Form!")
+            elif (request.method == 'GET'):
+                pid = request.GET["id"]
+                print("pid", pid)
+            question_form = QuestionForm(initial={'q_paper': pid})
             return render(request, 'question.html', {'question_form': question_form})
         else:
             return HttpResponse("Invalid Request")
@@ -81,29 +80,26 @@ def makePaper(request):
         print(user)
         if (user.profile and user.profile.user_type == 'T'):
             profile = user.profile
-            # return render(request, 'makePaper.html', {})
-            if request.method == "POST":
-                paper = QuestionPaper()
-                paper.teacher = profile
-                data = request.POST.get('data')
-                data = json.loads(data)
-                print(data)
-                # paper.title_text = request.POST["title_text"]
-                # qArr = dict(request.POST.lists())["question"]
-                # paper.pub_date = datetime.now()
-                # paper.save()
-                # print("---------" )
-                # print(request.POST)
-                # print(type(qArr))
-                # print("---------" )
 
-                # paper.question.add(*qArr)
-                # paper.save()
+            if request.method == "POST":
+                paper_form = PaperForm(data=request.POST)
+                if paper_form.is_valid():
+                    paper = paper_form.save(commit=False)
+                    paper.pub_date = datetime.now()
+                    teacher = profile
+                    teacher.user = user
+                    paper.teacher = teacher
+                    paper.save()
+                    # link = "question/"+str(paper.id)
+                    # print("link", link)
+                    print("id", paper.id)
+                    return render(request, 'make_ques.html', {'paper': paper, 'temp': "Hello World"})
+                else:
+                    print("Error Filling the Form!")
+                    return HttpResponse("Error Filling the Form!")
                 
-                return HttpResponse("Paper Created")
             else:
-                questions = Question.objects.filter(teacher = profile).order_by('created_at')
-                return render(request,"paper_maker.html",{'questions':questions})
+                return render(request,"paper_maker.html",{'paper_form': paper_form})
 
         else:
             return HttpResponse("Invalid Request")

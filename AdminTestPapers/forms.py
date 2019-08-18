@@ -21,4 +21,10 @@ class UserLoginForm(forms.Form):
 class QuestionForm(forms.ModelForm):
   class Meta:
     model = Question
-    exclude = ['teacher', 'created_at']  
+    exclude = ['teacher', 'created_at',]  
+
+
+class PaperForm(forms.ModelForm):
+  class Meta:
+    model = QuestionPaper
+    fields = ('title_text',)
