@@ -126,7 +126,7 @@ def takeTest(request):
                 paperPK = request.POST["paper_id"]
                 # extract everthing and send
                 questionList = Question.objects.filter(q_paper = paperPK)
-                return render(request,"testOngoing.html",{"paperID" : str(paperPK), "question":questionList})
+                return render(request,"testOngoing.html",{"paperID" : str(paperPK), "questions":questionList})
                 # return HttpResponse("So You Want To Give Paper " + str(paperPK))
 
 

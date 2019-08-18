@@ -7,10 +7,10 @@
   <hr>
     <lable>Question : </lable><p>{{q.question_text}}</p><br>
     <select name={{q.id}} required = "true">
-      <option value = {{q.op1_text}}></option>
-      <option value = {{q.op2_text}}></option>
-      <option value = {{q.op3_text}}></option>
-      <option value = {{q.op4_text}}></option>
+      <option value = {{q.op1_text}}>{{q.op1_text}}</option>
+      <option value = {{q.op2_text}}>{{q.op2_text}}</option>
+      <option value = {{q.op3_text}}>{{q.op3_text}}</option>
+      <option value = {{q.op4_text}}>{{q.op4_text}}</option>
     </select>
   <hr>
   {% endfor %}
