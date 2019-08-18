@@ -1,8 +1,20 @@
 {% extends "base.html" %}
 
 {% block content%}
-<h1>Welcome</h1>
-  {% if question %}
-    <h3>Question Added</h3>
-  {% endif %}
+  <div class="container-fluid">
+    <div class="jumbotron text-center">
+      <h1>QuizMe</h1>
+      <h2>Make and give customizable tests.</h2>
+    </div>
+  </div>
+  {% for paper in papers%}
+    <div class="container mt-3 mb-3">
+      <h3><i class="fas fa-scroll"></i> {{paper.title_text}}</h3>
+      <div class="card">
+        <div class="card-header"><i class="fas fa-clock"></i> {{paper.pub_date}}</div>
+        <div class="card-body"><i class="fas fa-chalkboard-teacher"></i> {{paper.teacher}}</div>
+        <!-- <div class="card-footer">Footer</div> -->
+      </div>
+    </div>
+  {% endfor %}
 {% endblock %}
