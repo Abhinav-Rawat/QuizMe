@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from AdminTestPapers.forms import UserSignUpForm, UserSignUpForm_User_Type, UserLoginForm, QuestionForm, PaperForm
 from datetime import datetime
@@ -45,7 +45,12 @@ def signin(request):
     else:
         signin_form = UserLoginForm()
     return render(request,'signin.html',{'signin_form' : signin_form})
-    
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('/')
+
 
 def question(request):
     if (request.user.is_authenticated):
