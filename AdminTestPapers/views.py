@@ -7,7 +7,8 @@ from AdminTestPapers.models import Question, QuestionPaper
 import json
 
 def home(request):
-    return render(request,'home.html')
+    papers = QuestionPaper.objects.order_by("pub_date")[:10]
+    return render(request,'home.html', {'papers': papers})
 
 def signup(request):
     if request.method == 'POST':
