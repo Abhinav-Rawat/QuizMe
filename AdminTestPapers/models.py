@@ -39,4 +39,4 @@ class MarksFromTheQuestion(models.Model):
   question = models.ForeignKey(Question, on_delete = models.CASCADE)
   test = models.ForeignKey(QuestionPaper, on_delete = models.CASCADE)
   student = models.ForeignKey(SiteUser, on_delete = models.CASCADE, default = None)
-  correct = models.BooleanField(default = 0)
+  correct = models.BooleanField(default = False)

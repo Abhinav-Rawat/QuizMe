@@ -9,5 +9,6 @@ urlpatterns = [
   path("makepaper/question/", views.question, name="question"),
   path("makepaper/", views.makePaper, name="makepaper"),
   path("taketest/", views.takeTest, name="takeTest"),
+  path("taketest/paper_done",views.paper_done,name="paper_done"),
 
 ]

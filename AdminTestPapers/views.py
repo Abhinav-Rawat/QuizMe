@@ -3,8 +3,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from AdminTestPapers.forms import UserSignUpForm, UserSignUpForm_User_Type, UserLoginForm, QuestionForm, PaperForm
 from datetime import datetime
-from AdminTestPapers.models import Question, QuestionPaper
-import json
+from AdminTestPapers.models import Question, QuestionPaper, MarksFromTheQuestion
+
 
 def home(request):
     papers = QuestionPaper.objects.order_by("pub_date")[:10]
@@ -134,4 +134,65 @@ def takeTest(request):
             return HttpResponse("Only A Student Can Give Tests")
     else:
         return HttpResponse("You Must Be Logged In")
+    
+def paper_done(request):
+    if request.user.is_authenticated:
+        user = request.user
+        if user.profile and user.profile.user_type == "S":
+            profile = user.profile
+            if request.method == "GET":
+                return render("Invalid Action")
+            elif request.method == "POST":
+                paper_id = request.POST["paper_id"]
+                print("---"+str(paper_id)+"---")
+                current_paper = QuestionPaper.objects.filter(id = int(paper_id))[0]
+                questionList = Question.objects.filter(q_paper = int(paper_id))
+                print(current_paper)
+                print(questionList)
+                print("---FineTillHere---")
+                for q in questionList:
+                    newObj = MarksFromTheQuestion()
+                    newObj.test = current_paper
+                    newObj.student = profile
+                    newObj.question = q
+                    verifyObjList = MarksFromTheQuestion.objects.filter(student = profile.id, test = paper_id, question = q.id)
+                    verifyObj = None
+                    if verifyObjList:
+                        verifyObj = verifyObjList[0]                      
+                    if q.ans_text == request.POST[str(q.id)]:
+                        newObj.correct = True
+                    if verifyObj:
+                        verifyObj.correct = newObj.correct
+                        verifyObj.save()
+                    else:
+                        newObj.save()
+
+
+                        
+                
+                theList = MarksFromTheQuestion.objects.filter(student = profile.id, test = paper_id)
+                correct = 0
+                total = 0
+                for q in theList:
+                    total += 1
+                    if q.correct:
+                        correct += 1
+                return HttpResponse("You Got "+str(correct)+" Out Of "+str(total))
+                
+                    
+                    
+
+
+                # extract everthing and send
+                # questionList = Question.objects.filter(q_paper = paperPK)
+                # return render(request,"testOngoing.html",{"paperID" : str(paperPK), "questions":questionList})
+                # return HttpResponse("So You Want To Give Paper " + str(paperPK))
+
+
+        else:
+            return HttpResponse("Only A Student Can Give Tests")
+    else:
+        return HttpResponse("You Must Be Logged In")
+    
+
 
