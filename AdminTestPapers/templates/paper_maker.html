@@ -1,29 +1,34 @@
 {% extends "base.html" %}
 
 {% block content%}
-<h1>Add - Questions</h1>
+  <h1>Add - Questions</h1>
   <form method="POST" id="form" >
-    {% csrf_token %}
-    <p><label>Question Paper Title</label><input type="text" name="title_text" maxlength="100" required="true" id="title"/></p>
-    <p><label>Select Some Question To Add</label><select multiple name="question" id="multiSelect">
-      {% for question in questions %}
-        <option value="{{question}}">{{question.question_text}}</option>
-      {% endfor %}
-      </select>
+    <!-- <p>
+      <label>Question Paper Title</label><input type="text" name="title_text" maxlength="100" required="true" id="title"/>
     </p>
+    <p>
+      <label>Select Some Question To Add</label>
+      <select multiple name="question" id="multiSelect">
+        {% for question in questions %}
+        <option value="{{question}}">{{question.question_text}}</option>
+        {% endfor %}
+      </select>
+    </p> -->
+    {% csrf_token %}
+    {{ paper_form.as_p }}
+    <button type="submit">Make Paper</button>
   </form>
-  <button id = "done">Done</button>
 
-  <script>
+  <!-- <script>
     let myForm = document.getElementById('form');
     let formData = new FormData(myForm);
     let sendMe = JSON.stringify(Object.fromEntries(formData));
     $("#done").click(function() {
       data = {};
       data["title_text"] = document.querySelector("#title").value;
-      data["question"] = document.querySelector("#multiSelect").values;
+      data["question"] = document.querySelector("#multiSelect").value;
       jQuery.post("",JSON.stringify(data));
     });
-  </script>
-  
+  </script> -->
+
 {% endblock %}

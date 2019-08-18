@@ -12,25 +12,24 @@ class SiteUser(models.Model):
   def __str__(self):
     return '%s %s' % (self.user.username, self.user_type)
 
-
-# Question Model
-class Question(models.Model):
-  teacher = models.ForeignKey(SiteUser, on_delete = models.CASCADE,default = None)
-  question_text = models.CharField(max_length = 300)
-  # created_at = models.DateTimeField(auto_now_add=True)
-  created_at = models.DateTimeField('date published')
-  op1_text = models.CharField(max_length=100)
-  op2_text = models.CharField(max_length = 100)
-  op3_text = models.CharField(max_length = 100)
-  op4_text = models.CharField(max_length = 100)
-  ans_text = models.CharField(max_length = 100)
-  
 # Question Paper Model
 class QuestionPaper(models.Model):
   teacher = models.ForeignKey(SiteUser, on_delete = models.CASCADE,default = None)
   pub_date = models.DateTimeField('date published')
   title_text = models.CharField(max_length = 100)
-  question = models.ManyToManyField(Question)
+  # question = models.ManyToManyField(Question)
+
+# Question Model
+class Question(models.Model):
+  # teacher = models.ForeignKey(SiteUser, on_delete = models.CASCADE,default = None)
+  q_paper = models.ForeignKey(QuestionPaper, on_delete=models.CASCADE)
+  created_at = models.DateTimeField('date published')
+  question_text = models.CharField(max_length = 300)
+  op1_text = models.CharField(max_length=100)
+  op2_text = models.CharField(max_length = 100)
+  op3_text = models.CharField(max_length = 100)
+  op4_text = models.CharField(max_length = 100)
+  ans_text = models.CharField(max_length = 100)
 
 # Model Handeling Marks Score By A Particular Student In A Particular Question (In A Particular Test)
 class MarksFromTheQuestion(models.Model):
