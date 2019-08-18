@@ -21,7 +21,8 @@ class UserLoginForm(forms.Form):
 class QuestionForm(forms.ModelForm):
   class Meta:
     model = Question
-    exclude = ['teacher', 'created_at',]  
+    exclude = ['teacher', 'created_at',]
+    widgets = {'q_paper': forms.HiddenInput()} 
 
 
 class PaperForm(forms.ModelForm):
