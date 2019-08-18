@@ -17,6 +17,9 @@ class QuestionPaper(models.Model):
   teacher = models.ForeignKey(SiteUser, on_delete = models.CASCADE,default = None)
   pub_date = models.DateTimeField('date published')
   title_text = models.CharField(max_length = 100)
+  def __str__(self):
+    return 'Test : %s By: %s' % (self.title_text, self.teacher.user.username)
+
   # question = models.ManyToManyField(Question)
 
 # Question Model

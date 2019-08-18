@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Here I Am</h1>
+<form method="POST">
+  {% csrf_token %}
+  {% for q in questions %}
+  <hr>
+    <lable>Question : </lable><p>{{q.question_text}}</p><br>
+    <select name={{q.id}} required = "true">
+      <option value = {{q.op1_text}}></option>
+      <option value = {{q.op2_text}}></option>
+      <option value = {{q.op3_text}}></option>
+      <option value = {{q.op4_text}}></option>
+    </select>
+  <hr>
+  {% endfor %}
+  <button type="submit" name="paperID" value={{paperID}}>Submit-Test<i class="fas fa-plus"></i></button>
+
+</form>
+{% endblock %}

@@ -112,3 +112,26 @@ def makePaper(request):
             return HttpResponse("Invalid Request")
     else:
         return redirect('/signin')
+    
+
+def takeTest(request):
+    if request.user.is_authenticated:
+        user = request.user
+        if user.profile and user.profile.user_type == "S":
+            profile = user.profile
+            if request.method == "GET":
+                papers = QuestionPaper.objects.order_by("pub_date")
+                return render(request,'take_test.html', {'papers': papers})
+            elif request.method == "POST":
+                paperPK = request.POST["paper_id"]
+                # extract everthing and send
+                questionList = Question.objects.filter(q_paper = paperPK)
+                return render(request,"testOngoing.html",{"paperID" : str(paperPK), "question":questionList})
+                # return HttpResponse("So You Want To Give Paper " + str(paperPK))
+
+
+        else:
+            return HttpResponse("Only A Student Can Give Tests")
+    else:
+        return HttpResponse("You Must Be Logged In")
+
