@@ -33,6 +33,12 @@
               <a class="nav-link" href="/makepaper">Make Paper<span class="sr-only">(current)</span></a>
             </li>
           {% endif %}
+          {% if user.profile.user_type == 'S' %}
+            <li class="nav-item active">
+              <a class="nav-link" href="/taketest">Take Test<span class="sr-only">(current)</span></a>
+            </li>
+          {% endif %}
+
         {% endif %}
       </ul>
       <ul class="navbar-nav ml-auto">
