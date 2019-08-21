@@ -6,15 +6,35 @@
   {% for q in questions %}
   <hr>
     <lable>Question : </lable><p>{{q.question_text}}</p><br>
-    <select name={{q.id}} required = "true">
-      <option value = {{q.op1_text}}>{{q.op1_text}}</option>
-      <option value = {{q.op2_text}}>{{q.op2_text}}</option>
-      <option value = {{q.op3_text}}>{{q.op3_text}}</option>
-      <option value = {{q.op4_text}}>{{q.op4_text}}</option>
-    </select>
+      <input name={{q.id}} value = {{q.op1_text}} type="radio" class="form-group" checked="checked"> {{q.op1_text}}<br>
+      <input name={{q.id}} value = {{q.op2_text}} type="radio" class="form-group"> {{q.op2_text}}<br>
+      <input name={{q.id}} value = {{q.op3_text}} type="radio" class="form-group"> {{q.op3_text}}<br>
+      <input name={{q.id}} value = {{q.op4_text}} type="radio" class="form-group"> {{q.op4_text}}<br>
   <hr>
   {% endfor %}
-  <button type="submit" name="paper_id" value={{paperID}}>Submit-Test<i class="fas fa-plus"></i></button>
+  <input type="hidden" name="paper_id" value={{paperID}}>
+  <button type="submit">Submit-Test<i class="fas fa-plus"></i></button>
 
 </form>
+<script>
+
+window.onload=function(){ 
+    var counter = 600;
+    var interval = setInterval(function() {
+        counter--;
+        $("#timer").text(`${parseInt(counter/60)} Min ${counter%60} Sec`);
+        if (counter <= 0) {
+            redirect();
+            clearInterval(interval);
+        }
+    }, 1000);
+
+};
+
+function redirect() {
+    document.querySelector("#myForm").submit();
+}
+
+
+</script>
 {% endblock %}
