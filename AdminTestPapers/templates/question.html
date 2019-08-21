@@ -1,10 +1,36 @@
 {% extends "base.html" %}
 
 {% block content%}
+<style>
+  #myForm {
+    width: 50%;
+    /* margin-left: auto; */
+    text-align: center;
+    display: block;
+    margin: auto;
+  }
+
+  label {
+    text-align: center;
+    display: block;
+    width: 50%;
+    margin : auto;
+  }
+  input {
+    display: block;
+    width : 75%;
+    margin : auto;
+  }
+</style>
+
+<script>
+  let x = document.querySelector("#myForm");
+
+</script>
   <h1>Make Question</h1>
-  <form method="post">
+  <form method="post" id= "myForm">
     {% csrf_token %}
     {{ question_form.as_p }}
-    <button type="submit">Make Question <i class="fas fa-plus"></i></button>
+    <button class="btn btn-primary" type="submit">Make Question <i class="fas fa-pen"></i></button>
   </form>
 {% endblock %}
