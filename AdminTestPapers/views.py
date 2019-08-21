@@ -20,7 +20,7 @@ def signup(request):
             user.save()
             user_type = signup_form_user_type.save(commit = False)
             user_type.user = user
-            user_type.save() 
+            user_type.save()
             return redirect('/signin')
         else:
             print("Error In Filling Up The Form")
@@ -44,6 +44,8 @@ def signin(request):
                 print("Invalid User")
                 return redirect('/signin')
     else:
+        if (request.user.is_authenticated):
+            return HttpResponse("<h2>You are already logged in.</h2><p>Log out to log in from another account.</p>")
         signin_form = UserLoginForm()
     return render(request,'signin.html',{'signin_form' : signin_form})
 
@@ -103,7 +105,7 @@ def makePaper(request):
                 else:
                     print("Error Filling the Form!")
                     return HttpResponse("Error Filling the Form!")
-                
+
             else:
                 paper_form = PaperForm()
                 return render(request,"paper_maker.html",{'paper_form': paper_form})
@@ -112,29 +114,39 @@ def makePaper(request):
             return HttpResponse("Invalid Request")
     else:
         return redirect('/signin')
-    
+
+
+def allTests(request):
+    if request.user.is_authenticated:
+        user = request.user
+        if user.profile and user.profile.user_type == "S":
+            profile = user.profile
+            papers = QuestionPaper.objects.order_by("pub_date")
+            return render(request, 'alltests.html', {'papers': papers})
+        else:
+            return HttpResponse("Login as student to see all papers!")
+    else:
+        return redirect('/signin')
+
+
 
 def takeTest(request):
     if request.user.is_authenticated:
         user = request.user
         if user.profile and user.profile.user_type == "S":
             profile = user.profile
-            if request.method == "GET":
-                papers = QuestionPaper.objects.order_by("pub_date")
-                return render(request,'take_test.html', {'papers': papers})
-            elif request.method == "POST":
-                paperPK = request.POST["paper_id"]
-                # extract everthing and send
-                questionList = Question.objects.filter(q_paper = paperPK)
-                return render(request,"testOngoing.html",{"paperID" : str(paperPK), "questions":questionList})
-                # return HttpResponse("So You Want To Give Paper " + str(paperPK))
-
-
+            pid = request.GET["id"]
+            questionList = Question.objects.filter(q_paper=pid)
+            q_paper = QuestionPaper.objects.get(id=pid)
+            print(pid)
+            print("paper:", q_paper.title_text)
+            return render(request,"testOngoing.html",{"paperID": str(pid), "questions": questionList, "paper": q_paper})
         else:
             return HttpResponse("Only A Student Can Give Tests")
     else:
-        return HttpResponse("You Must Be Logged In")
-    
+        return redirect('/signin')
+
+
 def paper_done(request):
     if request.user.is_authenticated:
         user = request.user
@@ -144,21 +156,17 @@ def paper_done(request):
                 return render("Invalid Action")
             elif request.method == "POST":
                 paper_id = request.POST["paper_id"]
-                print("---"+str(paper_id)+"---")
-                current_paper = QuestionPaper.objects.filter(id = int(paper_id))[0]
+                current_paper = QuestionPaper.objects.get(id = int(paper_id))
                 questionList = Question.objects.filter(q_paper = int(paper_id))
-                print(current_paper)
-                print(questionList)
-                print("---FineTillHere---")
                 for q in questionList:
                     newObj = MarksFromTheQuestion()
                     newObj.test = current_paper
                     newObj.student = profile
                     newObj.question = q
-                    verifyObjList = MarksFromTheQuestion.objects.filter(student = profile.id, test = paper_id, question = q.id)
+                    verifyObjList = MarksFromTheQuestion.objects.filter(student=profile.id, test=paper_id, question=q.id)
                     verifyObj = None
                     if verifyObjList:
-                        verifyObj = verifyObjList[0]                      
+                        verifyObj = verifyObjList[0]
                     if q.ans_text == request.POST[str(q.id)]:
                         newObj.correct = True
                     if verifyObj:
@@ -167,9 +175,6 @@ def paper_done(request):
                     else:
                         newObj.save()
 
-
-                        
-                
                 theList = MarksFromTheQuestion.objects.filter(student = profile.id, test = paper_id)
                 correct = 0
                 total = 0
@@ -177,23 +182,8 @@ def paper_done(request):
                     total += 1
                     if q.correct:
                         correct += 1
-                # return HttpResponse("You Got "+str(correct)+" Out Of "+str(total))
-                return render(request,"afterSubmission.html",{"correct":correct,"total":total})
-                
-                    
-                    
-
-
-                # extract everthing and send
-                # questionList = Question.objects.filter(q_paper = paperPK)
-                # return render(request,"testOngoing.html",{"paperID" : str(paperPK), "questions":questionList})
-                # return HttpResponse("So You Want To Give Paper " + str(paperPK))
-
-
+                return HttpResponse("You Got "+str(correct)+" Out Of "+str(total))
         else:
             return HttpResponse("Only A Student Can Give Tests")
     else:
-        return HttpResponse("You Must Be Logged In")
-    
-
-
+        return redirect('\signin')

@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Welcome To The Test</h2>
-<hr>
-<h3>Time Reamining</h3> <h4><span id="timer"> </span> </h4>
-<form method="POST" action="paper_done" id="myForm">
+<h1>{{paper}}</h1>
+<form method="POST" action="paper_done">
   {% csrf_token %}
   {% for q in questions %}
   <hr>
