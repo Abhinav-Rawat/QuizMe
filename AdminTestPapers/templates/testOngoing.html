@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Here I Am</h1>
+<h1>{{paper}}</h1>
 <form method="POST" action="paper_done">
   {% csrf_token %}
   {% for q in questions %}
