@@ -177,7 +177,8 @@ def paper_done(request):
                     total += 1
                     if q.correct:
                         correct += 1
-                return HttpResponse("You Got "+str(correct)+" Out Of "+str(total))
+                # return HttpResponse("You Got "+str(correct)+" Out Of "+str(total))
+                return render(request,"afterSubmission.html",{"correct":correct,"total":total})
                 
                     
                     
